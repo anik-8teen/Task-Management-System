@@ -8,10 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     use HasFactory;
-    protected  $fillable = ['name', 'project_code', 'user_id', 'status'];
+    protected  $fillable = ['name', 'project_code', 'user_id','team_ids', 'status'];
+    
+    protected $casts = [
+        'team_ids' => 'array',
+    ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
     }
 }

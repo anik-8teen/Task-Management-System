@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
 use App\Models\Project;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -13,7 +14,13 @@ class ProjectController extends Controller
 
     public function index()
     {
-        $projects = Project::where('user_id', Auth::user()->id)->paginate(15);
+        if (Auth::user()->role == 'manager') {
+            $projects = Project::where('user_id', Auth::user()->id)->paginate(15);
+        }
+        elseif (Auth::user()->role == 'member') {
+            $projects = Project::whereJsonContains('team_ids', (string)Auth::id())->paginate(10);
+        }
+
         return view('manager.project.index', compact('projects'));
     }
 
@@ -44,7 +51,9 @@ class ProjectController extends Controller
 
     public function show(string $id)
     {
-        //
+        $project = Project::findOrFail($id);
+        $tasks = Task::where('project_id', $project->id)->get();
+        return view('manager.project.show', compact('project', 'tasks'));
     }
 
 
@@ -64,7 +73,7 @@ class ProjectController extends Controller
         $project = Project::findOrFail($id);
 
         if ($project->user_id !== auth()->id()) {
-            return redirect()->route('projects.index')->with('error', 'You are not authorized to edit this project.');
+            return redirect()->route('project.index')->with('error', 'You are not authorized to edit this project.');
         }
 
         $projectCode = $this->generateProjectCode($request->name);
@@ -79,7 +88,7 @@ class ProjectController extends Controller
             $project->save();
         }
 
-        return redirect()->route('projects.index')->with('success', 'Project updated successfully.');
+        return redirect()->route('project.index')->with('success', 'Project updated successfully.');
     }
 
 
@@ -92,6 +101,8 @@ class ProjectController extends Controller
 
     public function destroy(string $id)
     {
-        
+        $project = Project::find($id);
+        $project->delete();
+        return redirect()->route('project.index')->with('success', 'Project Deleted successfully.');
     }
 }

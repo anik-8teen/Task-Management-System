@@ -14,7 +14,8 @@
             <label for="status" class="form-label">Status</label>
             <select class="form-select" id="status" name="status" required>
                 <option value="0" {{ old('status', $project->status) == 0 ? 'selected' : '' }}>Pending</option>
-                <option value="1" {{ old('status', $project->status) == 1 ? 'selected' : '' }}>Completed</option>
+                <option value="1" {{ old('status', $project->status) == 1 ? 'selected' : '' }}>On Progress</option>
+                <option value="1" {{ old('status', $project->status) == 2 ? 'selected' : '' }}>Completed</option>
             </select>
         </div>
 

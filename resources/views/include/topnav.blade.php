@@ -14,12 +14,12 @@
             <ul class="navbar-nav ms-auto">
                 <!-- Projects -->
                 <li class="nav-item">
-                    <a class="nav-link" href="">Projects</a>
+                    <a class="nav-link" href="{{route('project.index')}}">Projects</a>
                 </li>
 
                 <!-- Team Management -->
                 <li class="nav-item">
-                    <a class="nav-link" href="">Team Management</a>
+                    <a class="nav-link" href="{{route('user.index')}}">Team Management</a>
                 </li>
 
                 <!-- Authentication Links -->
